@@ -46,4 +46,32 @@ public class ProductServiceImpl implements ProductService{
         }
         return product;
     }
+
+    @Override
+    public void updateProductById(Integer id, ProductDto productDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Not found product", HttpStatus.NOT_FOUND));
+        if(!productDto.getName().equals(product.getName())) {
+            product.setName(productDto.getName());
+        }
+        if(!productDto.getDescription().equals(product.getDescription())) {
+            product.setDescription(productDto.getDescription());
+        }
+        if(!productDto.getPrice().equals(product.getPrice())) {
+            product.setPrice(productDto.getPrice());
+        }
+        if(!productDto.getImage().equals(product.getImage())) {
+            product.setImage(productDto.getImage());
+        }
+        productRepository.save(product);
+        redisService.deletePatternKey("Product");
+    }
+
+    @Override
+    public void deleteProductById(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Not found product", HttpStatus.NOT_FOUND));
+        productRepository.delete(product);
+        redisService.deletePatternKey(String.format("Product_%d", id));
+    }
 }

@@ -24,4 +24,16 @@ public class ProductController {
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProductById(@PathVariable Integer id, @RequestBody ProductDto productDto) {
+        productService.updateProductById(id, productDto);
+        return ResponseEntity.ok("Update success");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProductById(@PathVariable Integer id) {
+        productService.deleteProductById(id);
+        return ResponseEntity.ok("Delete success");
+    }
 }
